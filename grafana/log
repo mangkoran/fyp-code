@@ -1,0 +1,2 @@
+<30>1 2023-05-30T21:36:46+08:00 OPNsense.localdomain unbound 16941 - [meta sequenceId="1"] [16941:0] info: generate keytag query _ta-4f66. NULL IN
+<30>1 2023-05-30T21:00:01+08:00 OPNsense.localdomain unbound 16941 - [meta sequenceId="58"] [16941:1] reply: 127.0.0.1 _https._tcp.pkg.opnsense.org. SRV IN NOERROR 0.219823 0 114

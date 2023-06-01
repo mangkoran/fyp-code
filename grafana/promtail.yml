@@ -1,0 +1,68 @@
+server:
+  http_listen_port: 9080
+  # grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+- url: http://localhost:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: system
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: varlogs
+      __path__: /var/log/*log
+- job_name: syslog
+  syslog:
+    listen_address: 0.0.0.0:1514
+    listen_protocol: tcp
+    idle_timeout: 60s
+    label_structured_data: yes
+    use_incoming_timestamp: true
+    use_rfc5424_message: true
+    labels:
+      job: syslog
+  relabel_configs:
+  - source_labels: ['__syslog_message_app_name']
+    target_label: app
+  # - source_labels: ['__syslog_message_hostname']
+  #   target_label: host
+  pipeline_stages:
+  - match:
+      selector: '{app="unbound"}'
+      pipeline_name: unbound
+      stages:
+      - regex:
+          expression: '^<(?P<priority>\d|\d{2}|1[1-8]\d|19[01])>(?P<version>\d{1,2})\s(?P<timestamp>-|(?P<fullyear>[12]\d{3})-(?P<month>0\d|[1][012])-(?P<mday>[012]\d|3[01])T(?P<hour>[01]\d|2[0-4]):(?P<minute>[0-5]\d):(?P<second>[0-5]\d|60)(?:\.(?P<secfrac>\d{1,6}))?(?P<numoffset>Z|[+-]\d{2}:\d{2}))\s(?P<host>[\S]{1,255})\s(?P<appname>[\S]{1,48})\s(?P<procid>[\S]{1,128})\s(?P<msgid>[\S]{1,32})\s(?P<structureddata>-|(?:\[.+?[^\\]\])+)\s(?P<msg>(?:(?:\[(?P<pid>\d+):(?P<tid>\d+)\])\s(?P<logtype>\w+):\s(?P<srcip>(?:\d{1,3}\.?){4})\s(?P<domain>(?:\S+\.?){2,})\.\s(?P<dnstype>\w+)\s(?P<class>\w+)\s(?P<ret>\w+)\s(?P<ttr>\d+\.\d+)\s(?P<cachehit>0|1)\s(?P<size>\d+)))$'
+      - labels:
+          # timestamp:
+          host:
+          # appname:
+          logtype:
+          srcip:
+          domain:
+          dnstype:
+          class:
+          ret:
+          ttr:
+          cache:
+          size:
+      - pack:
+          labels:
+          - app
+          # - timestamp
+          - host
+          # - appname
+          - logtype
+          - srcip
+          - domain
+          - dnstype
+          - class
+          - ret
+          - ttr
+          - cache
+          - size
