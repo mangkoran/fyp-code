@@ -1,0 +1,10 @@
+# https://github.com/ansible-collections/community.general/issues/4408
+
+- name: My first play
+  hosts: pve
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+   - name: Print message
+     ansible.builtin.debug:
+       msg: Hello world
