@@ -1,0 +1,20 @@
+# https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_loops.html#with-dict
+
+- name: create containers
+  community.general.proxmox:
+    api_user: '{{ api_user }}'
+    api_host: '{{ api_host }}'
+    api_token_id: '{{ api_token_id }}'
+    api_token_secret: '{{ api_token_secret }}'
+    vmid: '{{ item.value.vmid | default([]) }}'
+    node: '{{ item.value.node | default(defaults.node) }}'
+    password: '{{ item.value.password }}'
+    hostname: example.org
+    cores: '{{ item.value.cores | default(defaults.cores) }}'
+    memory: '{{ item.value.memory | default(defaults.memory) }}'
+    swap: '{{ item.value.swap | default([]) }}'
+    storage: '{{ item.value.storage | default(defaults.storage) }}'
+    disk: '{{ item.value.disk | default(defaults.disk) }}'
+    ostemplate: '{{ item.value.ostemplate | default(defaults.ostemplate) }}'
+    netif: '{{ item.value.netif | default([]) }}'
+  loop: '{{ containers | dict2items }}'

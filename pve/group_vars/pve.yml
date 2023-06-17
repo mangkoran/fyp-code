@@ -1,0 +1,58 @@
+api_host: 'pve'
+api_user: 'root@pam'
+api_token_id: ansible
+api_token_secret: 4faf5ce0-f774-436e-8ddb-6e48dceb3899
+
+defaults:
+  node: 'pve'
+  onboot: true
+  cores: '1'
+  cpu: '1'
+  memory: '512'
+  storage: 'local-zfs'
+  disk: 'local-zfs:4'
+  nameserver: '10.10.1.1'
+  ostemplate: 'local:vztmpl/ubuntu-jammy-default.rootfs.tar.xz'
+
+containers:
+  # pihole1:
+  #   vmid: '200'
+  #   node: 'pve'
+  #   onboot: true
+  #   type: 'ubuntu'
+    # password: 'password'
+  #   cores: '1'
+  #   memory: '512'
+  #   swap: '0'
+  #   storage: 'local-zfs'
+  #   disk: 'local-zfs:4'
+  #   netif:
+  #     net0: 'name=eth0,bridge=vmbr0,ip=10.10.1.4/24,gw=10.10.1.1'
+  #
+  # monitoring1:
+  #   vmid: '201'
+  #   node: 'pve'
+  #   onboot: true
+  #   type: 'ubuntu'
+    # password: 'password'
+  #   cores: '2'
+  #   memory: '2048'
+  #   swap: '0'
+  #   storage: 'local-zfs'
+  #   disk: 'local-zfs:32'
+  #   netif:
+  #     net0: 'name=eth0,bridge=vmbr0,ip=10.10.1.5/24,gw=10.10.1.1'
+
+  example:
+    vmid: '300'
+    node: 'pve'
+    onboot: true
+    type: 'ubuntu'
+    password: 'password'
+    cores: '1'
+    memory: '512'
+    swap: '0'
+    storage: 'local-zfs'
+    disk: 'local-zfs:1'
+    netif:
+      net0: 'name=eth0,bridge=vmbr0,ip=10.10.1.6/24,gw=10.10.1.1'

@@ -1,0 +1,22 @@
+# https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-automate-initial-server-setup-on-ubuntu-20-04
+# https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-docker-on-ubuntu-20-04#what-does-this-playbook-do
+
+- name: install aptitude
+  apt:
+    name: aptitude
+    state: latest
+    update_cache: true
+
+- name: install required packages
+  apt:
+    pkg:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - python3-pip
+    - virtualenv
+    - python3-setuptools
+    state: latest
+    update_cache: true
+

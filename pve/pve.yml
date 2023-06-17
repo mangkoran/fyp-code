@@ -1,0 +1,43 @@
+# https://github.com/ansible-collections/community.general/issues/4408
+
+- name: deploy containers
+  hosts: pve
+  roles:
+  - pve
+  # tasks:
+  # - name: create pihole1
+  #   community.general.proxmox:
+  #     vmid: 200
+  #     node: pve
+  #     api_user: root@pam
+  #     api_host: pve
+  #     api_token_id: ansible
+  #     api_token_secret: 4faf5ce0-f774-436e-8ddb-6e48dceb3899
+  #     password: 123456
+  #     hostname: pihole1
+  #     storage: local-zfs
+  #     ostemplate: 'local:vztmpl/ubuntu-jammy-default.rootfs.tar.xz'
+  #     cores: 1
+  #     memory: 512
+  #     swap: 0
+  #     disk: 'local-zfs:8'
+  #     netif:
+  #       net0: 'name=eth0,bridge=vmbr0,ip=10.10.1.4/24,gw=10.10.1.1'
+  # - name: create monitoring1
+  #   community.general.proxmox:
+  #     vmid: 201
+  #     node: pve
+  #     api_user: root@pam
+  #     api_host: pve
+  #     api_token_id: ansible
+  #     api_token_secret: 4faf5ce0-f774-436e-8ddb-6e48dceb3899
+  #     password: 123456
+  #     hostname: example.org
+  #     storage: local-zfs
+  #     ostemplate: 'local:vztmpl/ubuntu-jammy-default.rootfs.tar.xz'
+  #     cores: 2
+  #     memory: 2048
+  #     swap: 0
+  #     disk: 'local-zfs:1'
+  #     netif:
+  #       net0: 'name=eth0,bridge=vmbr0,ip=10.10.1.5/24,gw=10.10.1.1'
