@@ -22,13 +22,13 @@
     netif: '{{ item.value.netif | default([]) }}'
     nameserver: '{{ item.value.nameserver | default(defaults.nameserver) }}'
     ostemplate: '{{ item.value.ostemplate | default(defaults.ostemplate) }}'
-    state: 'present'
+    state: present
   with_dict: '{{ containers }}'
   loop_control:
     pause: 3
   notify:
   - pause playbook execution
-  register: 'created_containers'
+  register: created_containers
 
 - meta: flush_handlers
 
@@ -41,7 +41,7 @@
     api_token_secret: '{{ api_token_secret }}'
     node: '{{ item.value.node | default(defaults.node) }}'
     hostname: '{{ item.item.key }}'
-    state: 'started'
+    state: started
   with_items: '{{ created_containers.results }}'
   notify:
   - pause playbook execution
