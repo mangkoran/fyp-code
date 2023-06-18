@@ -1,22 +1,41 @@
-# https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-automate-initial-server-setup-on-ubuntu-20-04
-# https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-docker-on-ubuntu-20-04#what-does-this-playbook-do
+# https://discourse.pi-hole.net/t/pi-hole-as-part-of-a-post-installation-script/3523/4
 
-- name: install aptitude
-  apt:
-    name: aptitude
-    state: latest
-    update_cache: true
+- name: check pihole executable
+  ansible.builtin.stat:
+    path: /usr/local/bin/pihole
+  register: pihole_executable
 
-- name: install required packages
-  apt:
-    pkg:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - software-properties-common
-    - python3-pip
-    - virtualenv
-    - python3-setuptools
-    state: latest
-    update_cache: true
+- name: install pihole
+  when: not pihole_executable.stat.exists
+  block:
+  - name: create pihole group
+    ansible.builtin.group:
+      name: pihole
+      state: present
 
+  - name: create pihole user
+    ansible.builtin.user:
+      name: pihole
+      groups: pihole
+      append: yes
+      create_home: false
+      state: present
+
+  - name: create /etc/pihole dir
+    ansible.builtin.file:
+      path: /etc/pihole
+      owner: pihole
+      group: pihole
+      mode: '0775'
+      state: directory
+
+  - name: copy pihole setup config
+    ansible.builtin.copy:
+      src: ../files/setupVars.conf
+      dest: /etc/pihole/setupVars.conf
+      mode: '0644'
+
+  - name: install pihole
+    ansible.builtin.shell: |
+      curl -L https://install.pi-hole.net \
+        | sudo PIHOLE_SKIP_OS_CHECK=true bash /dev/stdin --unattended
