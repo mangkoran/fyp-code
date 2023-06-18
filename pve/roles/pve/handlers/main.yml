@@ -1,0 +1,3 @@
+- name: pause playbook execution
+  pause:
+    seconds: 5

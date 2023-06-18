@@ -5,10 +5,14 @@ pve:
 
 pihole:
   hosts:
-    pihole1:
-      ansible_host: 10.10.1.4
+    # pihole1:
+    #   ansible_host: 10.10.1.4
+    pihole2:
+      ansible_host: 10.10.1.20
 
 monitoring:
   hosts:
-    monitoring:
-      ansible_host: 10.10.1.5
+    # monitoring1:
+    #   ansible_host: 10.10.1.5
+    monitoring2:
+      ansible_host: 10.10.1.21
