@@ -1,13 +1,19 @@
 # https://discourse.pi-hole.net/t/pi-hole-as-part-of-a-post-installation-script/3523/4
 
-- name: check pihole executable
-  ansible.builtin.stat:
-    path: /usr/local/bin/pihole
-  register: pihole_executable
+- name: check pihole install
+  ansible.builtin.command: which pihole
+  ignore_errors: true
+  register: pihole_install
 
 - name: install pihole
-  when: not pihole_executable.stat.exists
+  when: pihole_install.rc != 0
   block:
+  - name: install curl
+    ansible.builtin.apt:
+      name: curl
+      update_cache: yes
+      state: latest
+
   - name: create pihole group
     ansible.builtin.group:
       name: pihole
@@ -36,6 +42,6 @@
       mode: '0644'
 
   - name: install pihole
-    ansible.builtin.shell: |
+    ansible.builtin.shell: |-
       curl -L https://install.pi-hole.net \
-        | sudo PIHOLE_SKIP_OS_CHECK=true bash /dev/stdin --unattended
+      | sudo PIHOLE_SKIP_OS_CHECK=true bash /dev/stdin --unattended
