@@ -1,0 +1,5 @@
+- name: install prometheus
+  ansible.builtin.apt:
+    name: prometheus
+    update_cache: yes
+    state: latest
