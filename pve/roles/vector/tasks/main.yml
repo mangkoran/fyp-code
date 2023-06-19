@@ -1,0 +1,82 @@
+- name: update vector
+  ansible.builtin.apt:
+    name: vector
+    update_cache: yes
+    state: latest
+  ignore_errors: true
+  register: vector_update
+
+# - name: check vector install
+#   ansible.builtin.command: which vector
+#   ignore_errors: true
+#   register: vector_install
+
+- name: add vector apt repository and install vector
+  when: vector_update.failed
+  block:
+  - name: install curl
+    ansible.builtin.apt:
+      name: curl
+      update_cache: yes
+      state: latest
+
+  # https://vector.dev/docs/setup/installation/package-managers/apt/
+  - name: add vector apt key and repository
+    ansible.builtin.shell: |-
+      curl -1sLf https://repositories.timber.io/public/vector/cfg/setup/bash.deb.sh \
+      | sudo -E bash
+
+    register: result
+
+  # - ansible.builtin.debug:
+  #     var: result
+
+  - name: install vector
+    ansible.builtin.apt:
+      name: vector
+      update_cache: yes
+      state: latest
+
+- name: update vector envar config
+  ansible.builtin.copy:
+    src: ../files/vector
+    dest: /etc/default/vector
+    force: true
+    mode: '0600'
+
+- name: update vector config
+  ansible.builtin.copy:
+    # src: ../files/vector.yml
+    src: ../files/vector.default.yml
+    dest: /etc/vector/vector.yml
+    force: true
+    mode: '0644'
+
+- name: update vector systemd service
+  ansible.builtin.copy:
+    src: ../files/vector.service
+    dest: /lib/systemd/system/vector.service
+    force: true
+    mode: '0644'
+  register: vector_service
+
+- name: restart vector service
+  when: vector_service.changed
+  ansible.builtin.systemd:
+    name: vector
+    enabled: true
+    state: restarted
+    daemon_reload: true
+
+- name: reload vector service
+  when: not vector_service.changed
+  ansible.builtin.systemd:
+    name: vector
+    enabled: true
+    state: reloaded
+
+- name: stop vector service
+  ansible.builtin.systemd:
+    name: vector
+    enabled: true
+    state: stopped

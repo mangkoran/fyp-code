@@ -1,0 +1,121 @@
+sources:
+  input_syslog:
+    type: "syslog"
+    address: "0.0.0.0:9000"
+    mode: "tcp"
+
+enrichment_tables:
+  table_geoip:
+    path: /etc/vector/GeoLite2-City.mmdb
+    type: geoip
+
+transforms:
+  split_syslog_host:
+    type: "route"
+    inputs:
+    - "input_syslog"
+    route:
+      opnsense: '.host == "OPNsense.localdomain"'
+      pihole: '.host == "pihole1"'
+
+  label_opnsense_filterlog:
+    type: "remap"
+    inputs:
+    - "split_syslog_host.opnsense"
+    source: |-
+      if .appname == "filterlog" {
+        message_array = parse_csv!(string!(.message))
+        # ipv4 and ipv6
+        if message_array[8] == "4" || message_array[8] == "6" {
+          .filter_iface   = message_array[4]
+          .filter_action  = message_array[6]
+          .filter_dir     = message_array[7]
+          .filter_ipver   = message_array[8]
+          # ipv4
+          if message_array[8] == "4" {
+            .filter_proto   = message_array[16]
+            # .filter_flags   = message_array[23]
+            .filter_srcip   = message_array[18]
+            .filter_srcport = message_array[20]
+            .filter_dstip   = message_array[19]
+            .filter_dstport = message_array[21]
+          # ipv6
+          } else if message_array[8] == "6" {
+            .filter_proto   = message_array[12]
+            .filter_srcip   = message_array[15]
+            .filter_srcport = message_array[17]
+            .filter_dstip   = message_array[16]
+            .filter_dstport = message_array[18]
+          }
+        }
+      }
+
+  label_pihole_pihole:
+    type: "remap"
+    inputs:
+    - "split_syslog_host.pihole"
+    source: |-
+      if .appname == "pihole" {
+        message_array = compact(parse_csv!(string!(.message), delimiter: " "), string: true)
+        if message_array[7] == "blocked" || message_array[7] == "blacklisted" {
+          .block_reason  = message_array[7]
+          .block_list    = message_array[6]
+          .block_src     = parse_csv!(message_array[5], delimiter: "/")
+          .block_srcip   = .block_src[0]
+          .block_srcport = .block_src[1]
+          .block_domain  = message_array[8]
+          .block_ansaddr = message_array[10]
+        }
+      }
+
+  # split_opnsense_filterlog:
+  #   type: "route"
+  #   inputs:
+  #   - "opnsense_filterlog_remap"
+  #   route:
+  #     pass: '.filter_action == "pass"'
+  #     other: '.filter_action != "pass"'
+
+  split_pihole_pihole:
+    type: "route"
+    inputs:
+    - "label_pihole_pihole"
+    route:
+      block: '.block_reason == "blocked" || .block_reason == "blacklisted"'
+      other: '.block_reason != "blocked" && .block_reason != "blacklisted"'
+
+  geotag_opnsense_filterlog:
+    type: "remap"
+    inputs:
+    # - "split_opnsense_filterlog.pass"
+    - "label_opnsense_filterlog"
+    source: |-
+      .src_geoip = get_enrichment_table_record("table_geoip",
+        {
+          "ip": .filter_srcip
+        }
+      ) ?? null
+      .dst_geoip = get_enrichment_table_record("table_geoip",
+        {
+          "ip": .filter_dstip
+        }
+      ) ?? null
+
+sinks:
+  monitoring_loki:
+    type: "loki"
+    inputs:
+    - "geotag_opnsense_filterlog"
+    - "split_pihole_pihole.block"
+    encoding:
+      codec: "json"
+    endpoint: "http://0.0.0.0:3100"
+    labels:
+      source: "vector"
+  debug_console:
+    type: "console"
+    encoding:
+      codec: "json"
+    inputs:
+    - "geotag_opnsense_filterlog"
+    - "split_pihole_pihole.block"
