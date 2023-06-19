@@ -1,0 +1,32 @@
+- name: update loki
+  ansible.builtin.apt:
+    name: loki
+    update_cache: yes
+    state: latest
+  ignore_errors: true
+  register: loki_update
+
+- name: add grafana apt repository and install loki
+  when: loki_update.failed
+  block:
+  - name: install curl
+    ansible.builtin.apt:
+      name: curl
+      update_cache: yes
+      state: latest
+
+  # https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/
+  - name: add grafana apt key
+    ansible.builtin.shell: |-
+      curl -fsSL https://apt.grafana.com/gpg.key -o /usr/share/keyrings/grafana.key
+
+  - name: add grafana apt repository
+    ansible.builtin.shell: |-
+      echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" \
+      | sudo tee -a /etc/apt/sources.list.d/grafana.list
+
+  - name: install loki
+    ansible.builtin.apt:
+      name: loki
+      update_cache: yes
+      state: latest
