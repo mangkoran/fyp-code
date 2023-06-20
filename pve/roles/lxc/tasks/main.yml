@@ -1,7 +1,7 @@
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_loops.html
 
 - name: create containers
-  tags: pve, create, deploy
+  tags: pve, lxc, create, deploy
   community.general.proxmox:
     vmid: '{{ item.value.vmid | default([]) }}'
     api_user: '{{ api_user }}'
@@ -33,7 +33,7 @@
 - meta: flush_handlers
 
 - name: start created containers
-  tags: pve, create, deploy
+  tags: pve, lxc, create, deploy
   community.general.proxmox:
     api_user: '{{ api_user }}'
     api_host: '{{ api_host }}'
