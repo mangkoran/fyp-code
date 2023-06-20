@@ -1,0 +1,11 @@
+- name: setup opnsense
+  hosts: opnsense
+  connection: local
+  module_defaults:
+    group/ansibleguy.opnsense.all:
+      firewall: '{{ ansible_host }}'
+      api_key: '{{ api_key }}'
+      api_secret: '{{ api_secret }}'
+      ssl_verify: false
+  roles:
+  - opnsense
