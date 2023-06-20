@@ -1,6 +1,6 @@
 # https://github.com/ansible-collections/community.general/issues/4408
 
-- name: install vector
+- name: setup vector
   hosts: monitoring
   roles:
   - vector

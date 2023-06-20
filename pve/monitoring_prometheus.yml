@@ -1,6 +1,6 @@
 # https://github.com/ansible-collections/community.general/issues/4408
 
-- name: install prometheus
+- name: setup prometheus
   hosts: monitoring
   roles:
   - prometheus

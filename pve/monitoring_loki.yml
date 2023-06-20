@@ -1,6 +1,6 @@
 # https://github.com/ansible-collections/community.general/issues/4408
 
-- name: install loki
+- name: setup loki
   hosts: monitoring
   roles:
   - loki

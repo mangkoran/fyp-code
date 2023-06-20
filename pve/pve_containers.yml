@@ -1,6 +1,6 @@
 # https://github.com/ansible-collections/community.general/issues/4408
 
-- name: setup grafana
-  hosts: monitoring
+- name: deploy containers
+  hosts: pve
   roles:
-  - grafana
+  - lxc

@@ -1,6 +1,6 @@
 # https://github.com/ansible-collections/community.general/issues/4408
 
-- name: deploy containers
+- name: deploy kvm vm
   hosts: pve
   roles:
-  - pve
+  - kvm
