@@ -1,0 +1,1534 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 4,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 23,
+      "panels": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 18,
+            "w": 9,
+            "x": 0,
+            "y": 1
+          },
+          "id": 17,
+          "options": {
+            "displayLabels": [
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "right",
+              "showLegend": true,
+              "values": []
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "9.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+              },
+              "editorMode": "builder",
+              "expr": "{job=\"syslog\"} | unpack |= `reply`",
+              "hide": true,
+              "key": "Q-e48a250e-3221-4379-80fc-b944d99acf4c-0",
+              "queryType": "range",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+              },
+              "editorMode": "builder",
+              "expr": "topk(5, sum by(domain) (count_over_time({job=\"syslog\"} | unpack |= `reply` [$__range])))",
+              "hide": false,
+              "key": "Q-e48a250e-3221-4379-80fc-b944d99acf4c-0",
+              "queryType": "instant",
+              "refId": "B"
+            }
+          ],
+          "title": "Domain",
+          "transformations": [],
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 18,
+            "w": 9,
+            "x": 9,
+            "y": 1
+          },
+          "id": 18,
+          "options": {
+            "displayLabels": [
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "right",
+              "showLegend": true,
+              "values": []
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "9.5.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+              },
+              "editorMode": "code",
+              "expr": "topk(5, sum by(srcip) (count_over_time({job=\"syslog\"} | unpack |= \"reply\" [$__range])))",
+              "hide": false,
+              "key": "Q-e48a250e-3221-4379-80fc-b944d99acf4c-0",
+              "queryType": "instant",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+              },
+              "editorMode": "builder",
+              "expr": "{job=\"syslog\"} | unpack |= `reply`",
+              "hide": true,
+              "key": "Q-e48a250e-3221-4379-80fc-b944d99acf4c-0",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Source",
+          "transformations": [
+            {
+              "disabled": true,
+              "id": "extractFields",
+              "options": {
+                "source": "labels"
+              }
+            }
+          ],
+          "type": "piechart"
+        }
+      ],
+      "title": "Unbound",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 19,
+      "panels": [],
+      "title": "Pi-hole",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 9,
+        "x": 0,
+        "y": 2
+      },
+      "id": 21,
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": []
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+          },
+          "editorMode": "code",
+          "expr": "{source=\"vector\"} | json | host=\"pihole1\" | appname=\"pihole\"",
+          "hide": true,
+          "key": "Q-bed748fa-bea3-483a-b98c-d15a40ee41ee-0",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+          },
+          "editorMode": "code",
+          "expr": "topk(5, sum by(block_domain) (count_over_time({source=\"vector\"} | json | host=\"pihole1\" | appname=\"pihole\" [$__range])))",
+          "hide": false,
+          "queryType": "instant",
+          "refId": "B"
+        }
+      ],
+      "title": "Firewall",
+      "transformations": [],
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 22,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+          },
+          "editorMode": "code",
+          "expr": "{source=\"vector\"} | json | host=\"pihole1\" | appname=\"pihole\"",
+          "key": "Q-bed748fa-bea3-483a-b98c-d15a40ee41ee-0",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Firewall",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "keepTime": false,
+            "replace": false,
+            "source": "labels"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "appname": true,
+              "dst_geoip_continent_code": false,
+              "dst_geoip_timezone": true,
+              "facility": true,
+              "filter_iface": true,
+              "filteripver": true,
+              "host": true,
+              "hostname": true,
+              "labels": true,
+              "logtype": true,
+              "message": true,
+              "meta_sequenceId": true,
+              "procid": true,
+              "server": true,
+              "severity": true,
+              "source": true,
+              "source_ip": true,
+              "source_type": true,
+              "tsNs": true,
+              "version": true
+            },
+            "indexByName": {
+              "Line": 2,
+              "Time": 1,
+              "appname": 5,
+              "dst_geoip_continent_code": 15,
+              "dst_geoip_country_code": 16,
+              "dst_geoip_country_name": 17,
+              "dst_geoip_latitude": 18,
+              "dst_geoip_longitude": 19,
+              "dst_geoip_timezone": 20,
+              "facility": 21,
+              "filter_action": 7,
+              "filter_dir": 8,
+              "filter_dstip": 13,
+              "filter_dstport": 14,
+              "filter_iface": 6,
+              "filter_ipver": 9,
+              "filter_proto": 10,
+              "filter_srcip": 11,
+              "filter_srcport": 12,
+              "host": 22,
+              "hostname": 23,
+              "id": 4,
+              "labels": 0,
+              "message": 24,
+              "meta_sequenceId": 25,
+              "procid": 26,
+              "severity": 27,
+              "source": 28,
+              "source_ip": 29,
+              "source_type": 30,
+              "tsNs": 3,
+              "version": 31
+            },
+            "renameByName": {
+              "dst_geoip_continent_code": ""
+            }
+          }
+        },
+        {
+          "disabled": true,
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Time"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 20,
+      "panels": [],
+      "title": "Firewall",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 16,
+      "options": {
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "type": "default"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": true,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "blur": 14,
+              "radius": 5,
+              "weight": {
+                "fixed": 1,
+                "max": 1,
+                "min": 0
+              }
+            },
+            "location": {
+              "latitude": "dst_geoip_latitude",
+              "longitude": "dst_geoip_longitude",
+              "mode": "coords"
+            },
+            "name": "Destination",
+            "opacity": 1,
+            "tooltip": true,
+            "type": "heatmap"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "zero",
+          "lat": 0,
+          "lon": 0,
+          "zoom": 1
+        }
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+          },
+          "editorMode": "code",
+          "expr": "{source=\"vector\"} | json | host=\"OPNsense.localdomain\" | appname=\"filterlog\"",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "IP Address",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "auto",
+            "jsonPaths": [],
+            "keepTime": false,
+            "replace": false,
+            "source": "labels"
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "isNotNull",
+                  "options": {}
+                },
+                "fieldName": "dst_geoip_latitude"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "dst_geoip_latitude"
+              },
+              {
+                "destinationType": "number",
+                "targetField": "dst_geoip_longitude"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "Time": true,
+              "appname": true,
+              "dst_geoip_city_name": false,
+              "dst_geoip_continent_code": true,
+              "dst_geoip_country_code": false,
+              "dst_geoip_country_name": true,
+              "dst_geoip_latitude": false,
+              "dst_geoip_metro_code": true,
+              "dst_geoip_postal_code": true,
+              "dst_geoip_region_code": true,
+              "dst_geoip_region_name": true,
+              "dst_geoip_timezone": true,
+              "facility": true,
+              "filter_action": true,
+              "filter_dir": true,
+              "filter_iface": true,
+              "filter_ipver": true,
+              "filter_proto": true,
+              "filter_srcip": true,
+              "filter_srcport": true,
+              "filteraction": true,
+              "filterdstip": false,
+              "filterdstport": false,
+              "filterflags": true,
+              "filterflow": true,
+              "filteriface": true,
+              "filteripver": true,
+              "filterproto": true,
+              "filtersrcip": true,
+              "filtersrcport": true,
+              "host": true,
+              "hostname": true,
+              "id": true,
+              "labels": true,
+              "logtype": true,
+              "message": true,
+              "meta_sequenceId": true,
+              "procid": true,
+              "server": true,
+              "severity": true,
+              "source": true,
+              "source_ip": true,
+              "source_type": true,
+              "tsNs": true,
+              "version": true
+            },
+            "indexByName": {
+              "Line": 2,
+              "Time": 1,
+              "appname": 5,
+              "dst_geoip_city_name": 29,
+              "dst_geoip_continent_code": 28,
+              "dst_geoip_country_code": 30,
+              "dst_geoip_country_name": 31,
+              "dst_geoip_latitude": 32,
+              "dst_geoip_longitude": 33,
+              "dst_geoip_metro_code": 38,
+              "dst_geoip_postal_code": 35,
+              "dst_geoip_region_code": 36,
+              "dst_geoip_region_name": 37,
+              "dst_geoip_timezone": 34,
+              "facility": 6,
+              "filteraction": 7,
+              "filterdstip": 8,
+              "filterdstport": 9,
+              "filterflags": 27,
+              "filterflow": 10,
+              "filteriface": 11,
+              "filteripver": 12,
+              "filterproto": 13,
+              "filtersrcip": 14,
+              "filtersrcport": 15,
+              "host": 16,
+              "hostname": 17,
+              "id": 4,
+              "labels": 0,
+              "logtype": 18,
+              "message": 19,
+              "meta_sequenceId": 20,
+              "procid": 21,
+              "server": 22,
+              "severity": 23,
+              "source_ip": 24,
+              "source_type": 25,
+              "tsNs": 3,
+              "version": 26
+            },
+            "renameByName": {
+              "dst_geoip_city_name": "City",
+              "dst_geoip_country_code": "Country",
+              "dst_geoip_country_name": "",
+              "dst_geoip_latitude": "Latitude",
+              "dst_geoip_longitude": "Longitude",
+              "filterdstip": "IP",
+              "filterdstport": "Port"
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "string",
+                "targetField": "City"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Location",
+            "binary": {
+              "left": "City",
+              "reducer": "sum",
+              "right": "Country"
+            },
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "City",
+                "Country"
+              ],
+              "reducer": "allValues"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "disabled": true,
+          "id": "calculateField",
+          "options": {
+            "alias": "Coordinate",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "Latitude",
+                "Longitude"
+              ],
+              "reducer": "allValues"
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "City": true,
+              "Coordinate": true,
+              "Country": true,
+              "Latitude": false,
+              "Longitude": false,
+              "dst_geoip_region_name": false
+            },
+            "indexByName": {},
+            "renameByName": {
+              "dst_geoip_region_name": ""
+            }
+          }
+        }
+      ],
+      "type": "geomap"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 14,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d93719cd-2a2b-4b47-9b1d-2b665c9254e0"
+          },
+          "editorMode": "code",
+          "expr": "{source=\"vector\"} | json | host=\"OPNsense.localdomain\" | appname=\"filterlog\"",
+          "key": "Q-bed748fa-bea3-483a-b98c-d15a40ee41ee-0",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Firewall",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "keepTime": false,
+            "replace": false,
+            "source": "labels"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "appname": true,
+              "dst_geoip_continent_code": false,
+              "dst_geoip_timezone": true,
+              "facility": true,
+              "filter_iface": true,
+              "filteripver": true,
+              "host": true,
+              "hostname": true,
+              "labels": true,
+              "logtype": true,
+              "message": true,
+              "meta_sequenceId": true,
+              "procid": true,
+              "server": true,
+              "severity": true,
+              "source": true,
+              "source_ip": true,
+              "source_type": true,
+              "tsNs": true,
+              "version": true
+            },
+            "indexByName": {
+              "Line": 2,
+              "Time": 1,
+              "appname": 5,
+              "dst_geoip_continent_code": 15,
+              "dst_geoip_country_code": 16,
+              "dst_geoip_country_name": 17,
+              "dst_geoip_latitude": 18,
+              "dst_geoip_longitude": 19,
+              "dst_geoip_timezone": 20,
+              "facility": 21,
+              "filter_action": 7,
+              "filter_dir": 8,
+              "filter_dstip": 13,
+              "filter_dstport": 14,
+              "filter_iface": 6,
+              "filter_ipver": 9,
+              "filter_proto": 10,
+              "filter_srcip": 11,
+              "filter_srcport": 12,
+              "host": 22,
+              "hostname": 23,
+              "id": 4,
+              "labels": 0,
+              "message": 24,
+              "meta_sequenceId": 25,
+              "procid": 26,
+              "severity": 27,
+              "source": 28,
+              "source_ip": 29,
+              "source_type": 30,
+              "tsNs": 3,
+              "version": 31
+            },
+            "renameByName": {
+              "dst_geoip_continent_code": ""
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Time"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Mbits"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 43
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(internet_speed_download)",
+          "format": "time_series",
+          "instant": false,
+          "key": "Q-39dd0875-3fc7-46e4-95ba-6dfc0837d637-0",
+          "legendFormat": "Down",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(internet_speed_upload)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Up",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Internet Speed",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 51
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Hardware",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 52
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "mem_used_percent",
+          "instant": false,
+          "legendFormat": "{{host}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Memory Usage",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 60
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+          },
+          "editorMode": "code",
+          "expr": "disk_used_percent{path=\"/\"}",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Disk Utilization",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns",
+            "valueLabel": "path"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 68
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "100 - cpu_usage_idle",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "CPU",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns",
+            "valueLabel": "cpu"
+          }
+        },
+        {
+          "id": "concatenate",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "cpu-total": true
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "max": 100,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 76
+      },
+      "id": 9,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "100 - cpu_usage_idle{cpu=\"cpu-total\"}",
+          "hide": true,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+          },
+          "editorMode": "code",
+          "expr": "system_load1",
+          "hide": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 84
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "e8e5701b-6661-4b21-868e-0988753edb48"
+          },
+          "editorMode": "code",
+          "expr": "system_n_users",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Active Users",
+      "type": "stat"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "OPNsense",
+  "uid": "e3fa6afc-fae3-475c-98c5-f0fe2c7e98af",
+  "version": 32,
+  "weekStart": ""
+}

@@ -1,0 +1,13 @@
+- name: setup promtail syslog target
+  ansibleguy.opnsense.syslog:
+    description: 'Promtail{{ syslog_desc_postfix }}'
+    enabled: false
+    target: '10.10.1.5'
+    port: 1514
+    transport: 'tcp4'
+    rfc5424: true
+    match_fields:
+    - description
+    program:
+    - filterlog
+    - suricata

@@ -6,11 +6,6 @@
   ignore_errors: true
   register: vector_update
 
-# - name: check vector install
-#   ansible.builtin.command: which vector
-#   ignore_errors: true
-#   register: vector_install
-
 - name: add vector apt repository and install vector
   when: vector_update.failed
   block:
@@ -25,11 +20,6 @@
     ansible.builtin.shell: |-
       curl -1sLf https://repositories.timber.io/public/vector/cfg/setup/bash.deb.sh \
       | sudo -E bash
-
-    register: result
-
-  # - ansible.builtin.debug:
-  #     var: result
 
   - name: install vector
     ansible.builtin.apt:
@@ -46,8 +36,7 @@
 
 - name: update vector config
   ansible.builtin.copy:
-    # src: ../files/vector.yml
-    src: ../files/vector.default.yml
+    src: ../files/vector.yml
     dest: /etc/vector/vector.yml
     force: true
     mode: '0644'

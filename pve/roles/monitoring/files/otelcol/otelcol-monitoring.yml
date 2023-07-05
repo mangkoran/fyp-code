@@ -1,0 +1,51 @@
+receivers:
+  otlp:
+    protocols:
+      grpc: # :4317
+      http: # :4318
+
+  hostmetrics:
+    root_path: /hostfs
+    scrapers:
+      cpu:
+      disk:
+      load:
+      filesystem:
+      memory:
+      network:
+      paging:
+      processes:
+      process:
+
+processors:
+  batch:
+  resourcedetection:
+    detectors: [system]
+    system:
+      hostname_sources: [os]
+      resource_attributes:
+        host.id:
+          enabled: false # broken in podman
+
+exporters:
+  logging:
+    verbosity: detailed
+
+extensions:
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors:
+      - resourcedetection
+      - batch
+      exporters:
+      - logging
+    logs:
+      receivers: [otlp]
+      processors:
+      - resourcedetection
+      - batch
+      exporters:
+      - logging

@@ -1,0 +1,136 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.5.1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring
+  annotations:
+  labels:
+    app: monitoring
+spec:
+  replicas: 1 # podman cant use >1 replicas
+  selector:
+    matchLabels:
+      app: monitoring
+  template:
+    metadata:
+      labels:
+        app: monitoring
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+      - name: vector
+        image: docker.io/timberio/vector:latest-alpine
+        args:
+        - --config=/etc/vector/vector.yml
+        env:
+        - name: PROCFS_ROOT
+          value: /hostfs/proc
+        - name: SYSFS_ROOT
+          value: /hostfs/sys
+        ports:
+        - containerPort: 6000
+          hostPort: 6000
+          protocol: TCP
+        - containerPort: 9000
+          hostPort: 9000
+          protocol: TCP
+        volumeMounts:
+        - name: vector-config
+          mountPath: /etc/vector/vector.yml:ro
+        - name: vector-geoip
+          mountPath: /etc/vector/GeoLite2-City.mmdb:ro
+        - name: host-proc-fs
+          mountPath: /hostfs/proc
+        - name: host-sys-fs
+          mountPath: /hostfs/sys
+      - name: grafana
+        image: docker.io/grafana/grafana:latest
+        ports:
+          - containerPort: 3000
+            hostPort: 3000
+            protocol: TCP
+        volumeMounts:
+          - name: grafana
+            mountPath: /var/lib/grafana
+          - name: grafana-config
+            mountPath: /etc/grafana/grafana.ini:ro
+      - name: mimir
+        image: docker.io/grafana/mimir:latest
+        args:
+        - --config.file=/mnt/config/mimir-config.yml
+        ports:
+          - containerPort: 9009
+            hostPort: 9009
+            protocol: TCP
+          - containerPort: 9095
+            hostPort: 9095
+            protocol: TCP
+        volumeMounts:
+          - name: mimir
+            mountPath: /tmp/mimir
+          - name: mimir-config
+            mountPath: /mnt/config/mimir-config.yml:ro
+      - name: loki
+        image: docker.io/grafana/loki:latest
+        args:
+        - --config.file=/mnt/config/loki-config.yml
+        # securityContext:
+        #   runAsUser: 1000
+        ports:
+          - containerPort: 3100
+            hostPort: 3100
+            protocol: TCP
+          - containerPort: 9096
+            hostPort: 9096
+            protocol: TCP
+        volumeMounts:
+          - name: loki
+            mountPath: /tmp/loki
+          - name: loki-config
+            mountPath: /mnt/config/loki-config.yml:ro
+      volumes:
+      - name: vector-config
+        hostPath:
+          path: /root/podman/vector/vector-config.yml
+          type: File
+      - name: vector-geoip
+        hostPath:
+          path: /root/podman/vector/GeoLite2-City.mmdb
+          type: File
+      - name: host-proc-fs
+        hostPath:
+          path: /proc
+          type: Directory
+      - name: host-sys-fs
+        hostPath:
+          path: /sys
+          type: Directory
+      - name: grafana
+        hostPath:
+          path: /root/podman/grafana/data
+          type: Directory
+      - name: grafana-config
+        hostPath:
+          path: /root/podman/grafana/grafana.ini
+          type: File
+      - name: mimir
+        hostPath:
+          path: /root/podman/mimir/data
+          type: Directory
+      - name: mimir-config
+        hostPath:
+          path: /root/podman/mimir/mimir-config.yml
+          type: File
+      - name: loki
+        hostPath:
+          path: /root/podman/loki/data
+          type: Directory
+      - name: loki-config
+        hostPath:
+          path: /root/podman/loki/loki-config.yml
+          type: File
