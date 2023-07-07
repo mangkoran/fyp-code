@@ -38,14 +38,14 @@ extensions:
 
 service:
   pipelines:
-    metrics:
-      receivers: [hostmetrics]
-      processors:
-      - resourcedetection
-      - batch
-      exporters:
-      - otlp
-      - logging
+    # metrics:
+    #   receivers: [hostmetrics]
+    #   processors:
+    #   - resourcedetection
+    #   - batch
+    #   exporters: 
+    #   - otlp
+    #   - logging
     logs:
       receivers: [filelog]
       processors:

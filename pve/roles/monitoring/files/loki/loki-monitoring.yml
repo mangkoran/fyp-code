@@ -3,23 +3,35 @@
 auth_enabled: false
 
 server:
-  http_listen_port: 3100
-  grpc_listen_port: 9096
+  http_listen_port: 3100 # default
+  grpc_listen_port: 9095 # default
 
 common:
+  storage:
+    filesystem:
+      chunks_directory: /tmp/loki/chunks
+      rules_directory: /tmp/loki/rules
+
   ring:
     instance_addr: 127.0.0.1
     kvstore:
       store: inmemory
+
   replication_factor: 1
   path_prefix: /tmp/loki
 
 schema_config:
   configs:
-  - from: 2020-05-15
+  - from: 2023-01-01
     store: boltdb-shipper
     object_store: filesystem
     schema: v11
     index:
       prefix: index_
       period: 24h
+
+storage_config:
+  boltdb_shipper:
+    shared_store: filesystem
+    active_index_directory: /tmp/loki/index
+    cache_location: /tmp/loki/boltdb-cache

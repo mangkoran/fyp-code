@@ -12,19 +12,20 @@ transforms:
     type: remap
     inputs:
     - input_pihole_log
+    # source: |-
+    #   .host.name = "pihole1"
+    #   .container.name = "pihole"
+    #   .service.name = "pihole"
     source: |-
-      .host.name = "pihole1"
-      .container.name = "pihole"
-      .service.name = "pihole"
+      .host = "pihole1"
+      .appname = "pihole"
 
   label_host_metrics:
     type: remap
     inputs:
     - input_host_metrics
     source: |-
-      .host.name = "pihole1"
       .tags.host = "pihole1"
-      .container.name = "vector"
 
 sinks:
   monitoring_vector:
@@ -33,18 +34,20 @@ sinks:
     inputs:
     - label_pihole
 
-  prometheus:
-    type: prometheus_exporter # :9598 
+  monitoring_mimir:
+    type: prometheus_remote_write
     inputs:
     - label_host_metrics
+    endpoint: http://10.10.1.6:3101/api/v1/push # https://grafana.com/docs/mimir/latest/references/http-api/#remote-write
 
-  debug_console:
-    type: console
-    encoding:
-      codec: json
-    inputs:
-    - label_pihole
-    - label_host_metrics
+  # debug_console:
+  #   type: console
+  #   encoding:
+  #     codec: json
+  #   inputs:
+  #   - label_pihole
+  #   # - label_host_metrics
+  #   - input_host_metrics
 
 # {
 #   "appname":"pihole",
@@ -57,6 +60,7 @@ sinks:
 #   "source_type":"syslog",
 #   "timestamp":"2023-07-04T16:13:20Z"
 # }
+      
 # {
 #   "file":"/var/log/pihole/pihole.log",
 #   "host":"pihole-pod-0",
@@ -64,6 +68,7 @@ sinks:
 #   "source_type":"file",
 #   "timestamp":"2023-07-04T15:32:07.522219332Z"
 # }
+      
 # {
 #     "name":"network_receive_errs_total",
 #     "namespace":"host",

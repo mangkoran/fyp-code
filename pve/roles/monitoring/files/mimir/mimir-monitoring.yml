@@ -36,7 +36,8 @@ ruler_storage:
     dir: /tmp/mimir/rules
 
 server:
-  http_listen_port: 9009
+  http_listen_port: 3101 # 3100 taken by loki http
+  grpc_listen_port: 9096 # 9095 taken by loki grpc
   log_level: error
 
 store_gateway:
