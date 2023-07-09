@@ -1,10 +1,17 @@
 # https://grafana.com/docs/loki/latest/configuration/examples/#1-local-configuration-exampleyaml
+# https://github.com/grafana/loki/issues/5123
 
 auth_enabled: false
 
 server:
   http_listen_port: 3100 # default
   grpc_listen_port: 9095 # default
+
+query_scheduler:
+  max_outstanding_requests_per_tenant: 10000
+
+frontend:
+  max_outstanding_per_tenant: 10000
 
 common:
   storage:

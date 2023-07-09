@@ -43,9 +43,9 @@ spec:
           protocol: TCP
         volumeMounts:
         - name: pihole
-          mountPath: /etc/pihole:Z
+          mountPath: /etc/pihole
         - name: dnsmasq
-          mountPath: /etc/dnsmasq.d:Z
+          mountPath: /etc/dnsmasq.d
         - name: log-pihole
           mountPath: /var/log/pihole
       - name: vector

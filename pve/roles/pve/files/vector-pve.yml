@@ -1,0 +1,18 @@
+sources:
+  input_host_metrics:
+    type: host_metrics
+
+transforms:
+  label_host_metrics:
+    type: remap
+    inputs:
+    - input_host_metrics
+    source: |-
+      .tags.host = "pve1"
+
+sinks:
+  monitoring_mimir:
+    type: prometheus_remote_write
+    inputs:
+    - label_host_metrics
+    endpoint: http://10.10.1.6:3101/api/v1/push # https://grafana.com/docs/mimir/latest/references/http-api/#remote-write

@@ -1,0 +1,56 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.5.1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vector
+  annotations:
+  labels:
+    app: vector
+spec:
+  replicas: 1 # podman cant use >1 replicas
+  selector:
+    matchLabels:
+      app: vector
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: vector
+    spec:
+      containers:
+      - name: vector
+        image: docker.io/timberio/vector:latest-alpine
+        args:
+        - --config=/etc/vector/vector.yml
+        env:
+        - name: PROCFS_ROOT
+          value: /hostfs/proc
+        - name: SYSFS_ROOT
+          value: /hostfs/sys
+        ports:
+        - containerPort: 9598
+          hostPort: 9598
+          protocol: TCP
+        volumeMounts:
+        - name: vector-config
+          mountPath: /etc/vector/vector.yml:ro
+        - name: host-proc-fs
+          mountPath: /hostfs/proc
+        - name: host-sys-fs
+          mountPath: /hostfs/sys
+      volumes:
+      - name: vector-config
+        hostPath:
+          path: /root/podman/vector/vector-config.yml
+          type: File
+      - name: host-proc-fs
+        hostPath:
+          path: /proc
+          type: Directory
+      - name: host-sys-fs
+        hostPath:
+          path: /sys
+          type: Directory

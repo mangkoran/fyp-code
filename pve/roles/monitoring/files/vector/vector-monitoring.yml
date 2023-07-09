@@ -15,7 +15,7 @@ sources:
     type: prometheus_scrape
     instance_tag: "instance"
     endpoints:
-    - http://10.10.1.3:9090/metrics
+    - http://10.10.1.1:9090/metrics
 
 enrichment_tables:
   table_geoip:
@@ -23,69 +23,92 @@ enrichment_tables:
     type: geoip
 
 transforms:
-  split_syslog_host:
+  route_host:
     type: route
     inputs:
     - input_syslog
+    - input_vector
     route:
       opnsense: '.host == "opnsense1.home.arpa"'
-      # pihole: '.host == "pihole1"'
+      pihole: '.host == "pihole1"'
 
-  label_opnsense_host:
+  label_opnsense_rename:
     type: remap
     inputs:
-    - split_syslog_host.opnsense
+    - route_host.opnsense
     source: |-
       .host = "opnsense1"
+
+  route_opnsense_appname:
+    type: route
+    inputs:
+    - label_opnsense_rename
+    route:
+      filterlog: '.appname == "filterlog"'
+      suricata: '.appname == "suricata"'
+
+  route_pihole_appname:
+    type: route
+    inputs:
+    - route_host.pihole
+    route:
+      pihole: '.appname == "pihole"'
 
   label_opnsense_filterlog:
     type: remap
     inputs:
-    - label_opnsense_host
+    - route_opnsense_appname.filterlog
     source: |-
-      if .appname == "filterlog" {
-        message_array = parse_csv!(string!(.message))
-        # ipv4 and ipv6
-        if message_array[8] == "4" || message_array[8] == "6" {
-          .filter_iface   = message_array[4]
-          .filter_action  = message_array[6]
-          .filter_dir     = message_array[7]
-          .filter_ipver   = message_array[8]
-          # ipv4
-          if message_array[8] == "4" {
-            .filter_proto   = message_array[16]
-            # .filter_flags   = message_array[23]
-            .filter_srcip   = message_array[18]
-            .filter_srcport = message_array[20]
-            .filter_dstip   = message_array[19]
-            .filter_dstport = message_array[21]
-          # ipv6
-          } else if message_array[8] == "6" {
-            .filter_proto   = message_array[12]
-            .filter_srcip   = message_array[15]
-            .filter_srcport = message_array[17]
-            .filter_dstip   = message_array[16]
-            .filter_dstport = message_array[18]
-          }
+      message_array = parse_csv!(string!(.message))
+      # ipv4 and ipv6
+      if message_array[8] == "4" || message_array[8] == "6" {
+        .filter_iface   = message_array[4]
+        .filter_action  = message_array[6]
+        .filter_dir     = message_array[7]
+        .filter_ipver   = message_array[8]
+        # ipv4
+        if message_array[8] == "4" {
+          .filter_proto   = message_array[16]
+          # .filter_flags   = message_array[23]
+          .filter_srcip   = message_array[18]
+          .filter_srcport = message_array[20]
+          .filter_dstip   = message_array[19]
+          .filter_dstport = message_array[21]
+        # ipv6
+        } else if message_array[8] == "6" {
+          .filter_proto   = message_array[12]
+          .filter_srcip   = message_array[15]
+          .filter_srcport = message_array[17]
+          .filter_dstip   = message_array[16]
+          .filter_dstport = message_array[18]
         }
       }
+
+  label_opnsense_suricata:
+    type: remap
+    inputs:
+    - route_opnsense_appname.suricata
+    source: |-
+      .message = parse_json!(.message, max_depth: 4)
+      # .action = .message.alert.action
+      # .category = .message.alert.category
+      # .severity = .message.alert.severity
+      # .signature = .message.alert.signature
 
   label_pihole:
     type: remap
     inputs:
-    - input_vector
+    - route_pihole_appname.pihole
     source: |-
-      if .appname == "pihole" {
-        message_array = compact(parse_csv!(string!(.message), delimiter: " "), string: true)
-        if message_array[7] == "blocked" || message_array[7] == "blacklisted" {
-          .block_reason  = message_array[7]
-          .block_list    = message_array[6]
-          .block_src     = parse_csv!(message_array[5], delimiter: "/")
-          .block_srcip   = .block_src[0]
-          .block_srcport = .block_src[1]
-          .block_domain  = message_array[8]
-          .block_ansaddr = message_array[10]
-        }
+      message_array = compact(parse_csv!(string!(.message), delimiter: " "), string: true)
+      if message_array[7] == "blocked" || message_array[7] == "blacklisted" {
+        .block_reason  = message_array[7]
+        .block_list    = message_array[6]
+        .block_src     = parse_csv!(message_array[5], delimiter: "/")
+        .block_srcip   = .block_src[0]
+        .block_srcport = .block_src[1]
+        .block_domain  = message_array[8]
+        .block_ansaddr = message_array[10]
       }
 
 # {
@@ -102,6 +125,70 @@ transforms:
 #   },
 #   "source_type": "file",
 #   "timestamp": "2023-07-05T10:12:05.601020182Z"
+# }
+
+# {
+#   "timestamp": "2023-05-31T10:27:20.095780+0800",
+#   "flow_id": 22268072195620,
+#   "in_iface": "igb0",
+#   "event_type": "alert",
+#   "src_ip": "10.10.2.138",
+#   "src_port": 39467,
+#   "dest_ip": "10.10.2.1",
+#   "dest_port": 53,
+#   "proto": "UDP",
+#   "tx_id": 0,
+#   "alert": {
+#     "action": "allowed",
+#     "gid": 1,
+#     "signature_id": 2027758,
+#     "rev": 5,
+#     "signature": "ET DNS Query for .cc TLD",
+#     "category": "Potentially Bad Traffic",
+#     "severity": 2,
+#     "metadata": {
+#       "affected_product": [
+#         "Any"
+#       ],
+#       "attack_target": [
+#         "Client_Endpoint"
+#       ],
+#       "created_at": [
+#         "2019_07_26"
+#       ],
+#       "deployment": [
+#         "Perimeter"
+#       ],
+#       "former_category": [
+#         "DNS"
+#       ],
+#       "signature_severity": [
+#         "Minor"
+#       ],
+#       "updated_at": [
+#         "2020_09_17"
+#       ]
+#     }
+#   },
+#   "dns": {
+#     "query": [
+#       {
+#         "type": "query",
+#         "id": 19592,
+#         "rrname": "i.postimg.cc",
+#         "rrtype": "A",
+#         "tx_id": 0
+#       }
+#     ]
+#   },
+#   "app_proto": "dns",
+#   "flow": {
+#     "pkts_toserver": 1,
+#     "pkts_toclient": 0,
+#     "bytes_toserver": 83,
+#     "bytes_toclient": 0,
+#     "start": "2023-05-31T10:27:20.095780+0800"
+#   }
 # }
 
   # split_opnsense_filterlog:
@@ -155,6 +242,7 @@ sinks:
     inputs:
     - geotag_opnsense_filterlog
     - split_pihole.block
+    - label_opnsense_suricata
     encoding:
       codec: json
     endpoint: http://0.0.0.0:3100
@@ -173,6 +261,12 @@ sinks:
   #   encoding:
   #     codec: json
   #   inputs:
-  #   - geotag_opnsense_filterlog
+  #   - input_vector
+  #   - route_host.pihole
+  #   - route_pihole_appname.pihole
   #   - split_pihole.block
+    # - geotag_opnsense_filterlog
+    # - split_pihole.block
     # - input_vector
+    # - label_opnsense_suricata
+    # - route_opnsense_appname.suricata
