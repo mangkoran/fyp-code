@@ -1,47 +1,48 @@
 # https://discourse.pi-hole.net/t/pi-hole-as-part-of-a-post-installation-script/3523/4
 
-- name: check pihole install
-  ansible.builtin.command: which pihole
-  ignore_errors: true
-  register: pihole_install
-
-- name: install pihole
-  when: pihole_install.rc != 0
-  block:
-  - name: install curl
-    ansible.builtin.apt:
-      name: curl
-      update_cache: yes
-      state: latest
-
-  - name: create pihole group
-    ansible.builtin.group:
-      name: pihole
-      state: present
-
-  - name: create pihole user
-    ansible.builtin.user:
-      name: pihole
-      groups: pihole
-      append: yes
-      create_home: false
-      state: present
-
-  - name: create /etc/pihole dir
-    ansible.builtin.file:
-      path: /etc/pihole
-      owner: pihole
-      group: pihole
-      mode: '0775'
-      state: directory
-
-  - name: copy pihole setup config
-    ansible.builtin.copy:
-      src: ../files/setupVars.conf
-      dest: /etc/pihole/setupVars.conf
-      mode: '0644'
-
-  - name: install pihole
-    ansible.builtin.shell: |-
-      curl -L https://install.pi-hole.net \
-      | sudo PIHOLE_SKIP_OS_CHECK=true bash /dev/stdin --unattended
+# - name: check pihole install
+#   ansible.builtin.command: which pihole
+#   ignore_errors: true
+#   register: pihole_install
+#
+# - name: install pihole
+#   when: pihole_install.rc != 0
+#   block:
+#   - name: install curl
+#     ansible.builtin.apt:
+#       name: curl
+#       update_cache: yes
+#       state: latest
+#
+#   - name: create pihole group
+#     ansible.builtin.group:
+#       name: pihole
+#       state: present
+#
+#   - name: create pihole user
+#     ansible.builtin.user:
+#       name: pihole
+#       groups: pihole
+#       append: yes
+#       create_home: false
+#       state: present
+#
+#   - name: create /etc/pihole dir
+#     ansible.builtin.file:
+#       path: /etc/pihole
+#       owner: pihole
+#       group: pihole
+#       mode: '0775'
+#       state: directory
+#
+#   - name: copy pihole setup config
+#     ansible.builtin.copy:
+#       src: ../files/setupVars.conf
+#       dest: /etc/pihole/setupVars.conf
+#       mode: '0644'
+#
+#   - name: install pihole
+#     ansible.builtin.shell: |-
+#       curl -L https://install.pi-hole.net \
+#       | sudo PIHOLE_SKIP_OS_CHECK=true bash /dev/stdin --unattended
+- import_tasks: pihole.yml

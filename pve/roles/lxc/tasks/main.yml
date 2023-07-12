@@ -1,13 +1,13 @@
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_loops.html
 
 - name: create containers
-  tags: pve, lxc, create, deploy
   community.general.proxmox:
-    vmid: '{{ item.value.vmid | default([]) }}'
     api_user: '{{ api_user }}'
     api_host: '{{ api_host }}'
-    api_token_id: '{{ api_token_id }}'
-    api_token_secret: '{{ api_token_secret }}'
+    api_password: '{{ api_password }}'
+    # api_token_id: '{{ api_token_id }}'
+    # api_token_secret: '{{ api_token_secret }}'
+    vmid: '{{ item.value.vmid | default([]) }}'
     node: '{{ item.value.node | default(defaults.node) }}'
     onboot: '{{ item.value.onboot | default(defaults.onboot) }}'
     hostname: '{{ item.key }}'
@@ -22,6 +22,7 @@
     netif: '{{ item.value.netif | default([]) }}'
     nameserver: '{{ item.value.nameserver | default(defaults.nameserver) }}'
     ostemplate: '{{ item.value.ostemplate | default(defaults.ostemplate) }}'
+    features: '{{ item.value.features | default([]) }}'
     state: present
   with_dict: '{{ containers }}'
   loop_control:
@@ -33,7 +34,6 @@
 - meta: flush_handlers
 
 - name: start created containers
-  tags: pve, lxc, create, deploy
   community.general.proxmox:
     api_user: '{{ api_user }}'
     api_host: '{{ api_host }}'

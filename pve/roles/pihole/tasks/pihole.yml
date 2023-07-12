@@ -1,0 +1,25 @@
+- name: create pihole pod volume directory
+  ansible.builtin.file:
+    path: '/root/podman/{{ item.dir }}'
+    state: directory
+  loop:
+  - { dir: pihole/etc-pihole }
+  - { dir: pihole/etc-dnsmasq.d }
+  - { dir: pihole/log-pihole }
+  - { dir: vector }
+
+- name: update vector config
+  ansible.builtin.copy:
+    src: ~/sch/sem-8/psm/pve-ansible/pve/roles/pihole/files/vector-pihole.yml
+    dest: /root/podman/vector/vector-config.yml
+
+- name: update pihole pod kube manifest
+  ansible.builtin.copy:
+    src: ~/sch/sem-8/psm/pve-ansible/pve/roles/pihole/files/pihole-deployment.yml
+    dest: /root/podman/pihole-deployment.yml
+
+- name: run pihole pod
+  containers.podman.podman_play:
+    kube_file: /root/podman/pihole-deployment.yml
+    network: bridge
+    state: started
