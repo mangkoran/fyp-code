@@ -1,8 +1,8 @@
-- name: setup promtail syslog target
+- name: setup vector syslog target
   ansibleguy.opnsense.syslog:
-    description: 'Suricata{{ syslog_desc_postfix }}'
+    description: 'Test{{ syslog_desc_postfix }}'
     enabled: false
-    target: '10.10.1.5'
+    target: '10.10.1.40'
     port: 1514
     transport: 'tcp4'
     rfc5424: true

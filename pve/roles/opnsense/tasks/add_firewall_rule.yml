@@ -6,3 +6,4 @@
     protocol: 'TCP'
     description: 'test rule'
     match_fields: ['description']
+    state: absent

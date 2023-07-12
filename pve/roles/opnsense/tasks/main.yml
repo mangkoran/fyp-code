@@ -1,2 +1,3 @@
-- import_tasks: service.yml
-- import_tasks: syslog.yml
+# - import_tasks: add_firewall_rule.yml
+# - import_tasks: setup_syslog.yml
+- import_tasks: start_service.yml
