@@ -3,30 +3,21 @@
 - name: create kvm vm
   tags: pve, kvm, create, deploy
   community.general.proxmox_kvm:
-    vmid: 101
+    vmid: 100
     api_user: '{{ api_user }}'
     api_host: '{{ api_host }}'
-    api_token_id: '{{ api_token_id }}'
-    api_token_secret: '{{ api_token_secret }}'
+    api_password: '{{ api_password }}'
+    # api_token_id: '{{ api_token_id }}'
+    # api_token_secret: '{{ api_token_secret }}'
     node: '{{ item.value.node | default(defaults.node) }}'
-    name: opnsense2
+    name: opnsense1
     cores: 3
-    memory: 2048
+    memory: 6144
     scsi:
       scsi0: 'local-zfs:32'
-
     net:
       net0: 'virtio,bridge=vmbr0'
   notify:
   - pause playbook execution
-  register: created_containers
 
 - meta: flush_handlers
-
-# - name: start created containers
-#   tags: pve, kvm, create, deploy
-#   community.general.proxmox_kvm:
-#   with_items: '{{ created_containers.results }}'
-#   notify:
-#   - pause playbook execution
-#   when: item.changed

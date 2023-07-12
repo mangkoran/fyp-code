@@ -523,7 +523,7 @@
             "uid": "b1916506-cfa3-49e3-8135-d7ff7af78925"
           },
           "editorMode": "code",
-          "expr": "topk(20, sum by(message_alert_signature) (count_over_time({source=\"vector\"} | json | host = `opnsense1` | appname = `suricata` [$__range])))",
+          "expr": "topk(10, sum by(message_alert_signature) (count_over_time({source=\"vector\"} | json | host = `opnsense1` | appname = `suricata` [$__range])))",
           "hide": false,
           "queryType": "instant",
           "refId": "B"
@@ -621,7 +621,7 @@
             "uid": "b1916506-cfa3-49e3-8135-d7ff7af78925"
           },
           "editorMode": "code",
-          "expr": "topk(20, sum by(message_alert_category) (count_over_time({source=\"vector\"} | json | host = `opnsense1` | appname = `suricata` [$__range])))",
+          "expr": "topk(10, sum by(message_alert_category) (count_over_time({source=\"vector\"} | json | host = `opnsense1` | appname = `suricata` [$__range])))",
           "hide": false,
           "queryType": "instant",
           "refId": "B"
@@ -665,7 +665,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -750,7 +751,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -842,7 +844,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1066,7 +1069,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1173,7 +1177,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1293,7 +1298,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1388,7 +1394,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1472,7 +1479,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1486,7 +1493,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1537,7 +1545,7 @@
             "uid": "be30522b-a2eb-4763-adc1-135592abfa29"
           },
           "editorMode": "builder",
-          "expr": "irate(node_network_receive_bytes_total{host=\"opnsense1\"}[$__interval]) * 8",
+          "expr": "irate(node_network_receive_bytes_total{host=\"opnsense1\"}[1m]) * 8",
           "legendFormat": "{{host}} recv {{device}}",
           "range": true,
           "refId": "A"
@@ -1548,7 +1556,7 @@
             "uid": "be30522b-a2eb-4763-adc1-135592abfa29"
           },
           "editorMode": "builder",
-          "expr": "irate(node_network_transmit_bytes_total{host=\"opnsense1\"}[$__interval]) * 8",
+          "expr": "irate(node_network_transmit_bytes_total{host=\"opnsense1\"}[1m]) * 8",
           "hide": false,
           "legendFormat": "{{host}} trans {{device}}",
           "range": true,
@@ -1604,7 +1612,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1716,7 +1725,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1812,7 +1822,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1910,7 +1921,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1961,7 +1973,8 @@
             "uid": "be30522b-a2eb-4763-adc1-135592abfa29"
           },
           "editorMode": "builder",
-          "expr": "irate(host_network_receive_bytes_total{host=\"$host\"}[$__interval]) * 8",
+          "expr": "irate(host_network_receive_bytes_total{host=\"$host\"}[1m]) * 8",
+          "hide": false,
           "legendFormat": "{{host}} recv {{device}}",
           "range": true,
           "refId": "A"
@@ -1972,7 +1985,7 @@
             "uid": "be30522b-a2eb-4763-adc1-135592abfa29"
           },
           "editorMode": "builder",
-          "expr": "irate(host_network_transmit_bytes_total{host=\"$host\"}[$__interval]) * 8",
+          "expr": "irate(host_network_transmit_bytes_total{host=\"$host\"}[1m]) * 8",
           "hide": false,
           "legendFormat": "{{host}} trans {{device}}",
           "range": true,
@@ -2028,7 +2041,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2078,7 +2092,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "30s",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -2086,7 +2100,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -2128,13 +2142,13 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "pve1",
   "uid": "b20421a9-d16c-4438-944d-1b3637004200",
-  "version": 149,
+  "version": 155,
   "weekStart": ""
 }
