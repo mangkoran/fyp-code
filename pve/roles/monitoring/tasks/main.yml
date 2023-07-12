@@ -1,2 +1,3 @@
-# - import_tasks: podman.yml
-- import_tasks: monitoring.yml
+- import_tasks: install_podman.yml
+# - import_tasks: start_monitoring_pod.yml
+- import_tasks: delete_monitoring_pod.yml

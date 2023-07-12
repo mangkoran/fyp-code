@@ -1,6 +1,6 @@
 - name: setup promtail syslog target
   ansibleguy.opnsense.syslog:
-    description: 'Promtail{{ syslog_desc_postfix }}'
+    description: 'Suricata{{ syslog_desc_postfix }}'
     enabled: false
     target: '10.10.1.5'
     port: 1514

@@ -1,0 +1,4 @@
+- name: delete monitoring pod
+  containers.podman.podman_play:
+    kube_file: /root/podman/monitoring-deployment.yml
+    state: absent

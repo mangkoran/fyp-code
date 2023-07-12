@@ -20,7 +20,7 @@
     storage: '{{ item.value.storage | default(defaults.storage) }}'
     disk: '{{ item.value.disk | default(defaults.disk) }}'
     netif: '{{ item.value.netif | default([]) }}'
-    nameserver: '{{ item.value.nameserver | default(defaults.nameserver) }}'
+    # nameserver: '{{ item.value.nameserver | default(defaults.nameserver) }}'
     ostemplate: '{{ item.value.ostemplate | default(defaults.ostemplate) }}'
     features: '{{ item.value.features | default([]) }}'
     state: present

@@ -1,14 +1,14 @@
-- name: start suricata
-  ansibleguy.opnsense.service:
-    name: ids
-    action: start
-
 - name: start syslog
   ansibleguy.opnsense.service:
     name: syslog
     action: start
 
-- name: start telegraf
+- name: start suricata
   ansibleguy.opnsense.service:
-    name: telegraf
+    name: ids
+    action: start
+
+- name: start node exporter
+  ansibleguy.opnsense.service:
+    name: node_exporter
     action: start
