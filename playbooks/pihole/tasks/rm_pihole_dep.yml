@@ -1,0 +1,5 @@
+---
+- name: remove pihole deployment
+  containers.podman.podman_play:
+    kube_file: /root/podman/pihole-deployment.yml
+    state: absent

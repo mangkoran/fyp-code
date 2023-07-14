@@ -1,0 +1,22 @@
+---
+- name: make vector deployment volume directory
+  ansible.builtin.file:
+    path: '/root/podman/{{ item.path }}'
+    state: directory
+  loop:
+  - { path: vector }
+
+- name: update component config and deployment manifest
+  ansible.builtin.copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  loop:
+  - src: ../files/vector-pve.yml
+    dest: /root/podman/vector/vector-config.yml
+  - src: ../files/pve-deployment.yml
+    dest: /root/podman/pve-deployment.yml
+
+- name: create vector deployment
+  containers.podman.podman_play:
+    kube_file: /root/podman/pve-deployment.yml
+    state: started

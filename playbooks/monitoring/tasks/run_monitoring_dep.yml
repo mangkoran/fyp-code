@@ -1,0 +1,33 @@
+---
+- name: make monitoring deployment volume directory
+  ansible.builtin.file:
+    path: '/root/podman/{{ item.dir }}'
+    state: directory
+  loop:
+  - { dir: grafana/data }
+  - { dir: mimir/data }
+  - { dir: loki/data }
+  - { dir: vector }
+
+- name: update component config and deployment manifest
+  ansible.builtin.copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  loop:
+  - src: ../files/grafana/grafana-monitoring.ini
+    dest: /root/podman/grafana/grafana.ini
+  - src: ../files/mimir/mimir-monitoring.yml
+    dest: /root/podman/mimir/mimir-config.yml
+  - src: ../files/loki/loki-monitoring.yml
+    dest: /root/podman/loki/loki-config.yml
+  - src: ../files/vector/vector-monitoring.yml
+    dest: /root/podman/vector/vector-config.yml
+  - src: ../files/vector/GeoLite2-City.mmdb
+    dest: /root/podman/vector/GeoLite2-City.mmdb
+  - src: ../files/monitoring-deployment.yml
+    dest: /root/podman/monitoring-deployment.yml
+
+- name: create monitoring deployment
+  containers.podman.podman_play:
+    kube_file: /root/podman/monitoring-deployment.yml
+    state: started

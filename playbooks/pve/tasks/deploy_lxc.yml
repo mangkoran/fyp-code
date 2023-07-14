@@ -1,0 +1,45 @@
+---
+- name: create containers
+  community.general.proxmox:
+    api_user: '{{ api_user }}'
+    api_host: '{{ api_host }}'
+    api_password: '{{ api_password }}'
+    # api_token_id: '{{ api_token_id }}'
+    # api_token_secret: '{{ api_token_secret }}'
+    vmid: '{{ item.value.vmid | default([]) }}'
+    node: '{{ item.value.node | default(defaults.node) }}'
+    onboot: '{{ item.value.onboot | default(defaults.onboot) }}'
+    hostname: '{{ item.key }}'
+    password: '{{ item.value.password }}'
+    pubkey: '{{ item.value.pubkey | default(defaults.pubkey) }}'
+    cores: '{{ item.value.cores | default(defaults.cores) }}'
+    cpus: '{{ item.value.cpu | default(defaults.cpu) }}'
+    memory: '{{ item.value.memory | default(defaults.memory) }}'
+    swap: '{{ item.value.swap | default([]) }}'
+    storage: '{{ item.value.storage | default(defaults.storage) }}'
+    disk: '{{ item.value.disk | default(defaults.disk) }}'
+    netif: '{{ item.value.netif | default([]) }}'
+    # nameserver: '{{ item.value.nameserver | default(defaults.nameserver) }}'
+    ostemplate: '{{ item.value.ostemplate | default(defaults.ostemplate) }}'
+    features: '{{ item.value.features | default([]) }}'
+    state: present
+  with_dict: '{{ containers }}'
+  # loop_control:
+  #   pause: 3
+  register: created_containers
+
+- name: pause playbook execution
+  pause:
+    seconds: 10
+
+- name: start created containers
+  community.general.proxmox:
+    api_user: '{{ api_user }}'
+    api_host: '{{ api_host }}'
+    api_token_id: '{{ api_token_id }}'
+    api_token_secret: '{{ api_token_secret }}'
+    node: '{{ item.value.node | default(defaults.node) }}'
+    hostname: '{{ item.item.key }}'
+    state: started
+  with_items: '{{ created_containers.results }}'
+  when: item.changed

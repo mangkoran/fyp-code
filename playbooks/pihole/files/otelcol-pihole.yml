@@ -1,0 +1,57 @@
+---
+receivers:
+  filelog:
+    include:
+    - /var/log/pihole/pihole.log
+
+  hostmetrics:
+    root_path: /hostfs
+    scrapers:
+      cpu:
+      disk:
+      load:
+      filesystem:
+      memory:
+      network:
+      paging:
+      processes:
+      process:
+
+processors:
+  batch:
+  resourcedetection:
+    detectors: [system]
+    system:
+      hostname_sources: [os]
+      resource_attributes:
+        host.id:
+          enabled: false # broken in podman
+
+exporters:
+  otlp:
+    endpoint: 10.10.1.6:4317 # OTLP gRPC default port
+    tls:
+      insecure: true
+  logging:
+    verbosity: detailed
+
+extensions:
+
+service:
+  pipelines:
+    # metrics:
+    #   receivers: [hostmetrics]
+    #   processors:
+    #   - resourcedetection
+    #   - batch
+    #   exporters: 
+    #   - otlp
+    #   - logging
+    logs:
+      receivers: [filelog]
+      processors:
+      - resourcedetection
+      - batch
+      exporters: 
+      - otlp
+      - logging

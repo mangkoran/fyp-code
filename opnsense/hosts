@@ -1,8 +1,0 @@
-all:
-  children:
-    pve:
-      hosts:
-        mail.example.com:
-    opnsense:
-      hosts:
-        mail.example.com:

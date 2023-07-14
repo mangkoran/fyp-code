@@ -1,4 +1,0 @@
-- name: setup monitoring stack
-  hosts: test
-  roles:
-  - monitoring

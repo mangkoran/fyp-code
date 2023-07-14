@@ -1,4 +1,0 @@
-api_key: 'KXK1JI2gVjfIddbqJbmHoL/aeBG5GceHNcBkqHaM09ANcLpsuWtWrxe8QitpLj8ElKKbnezihczD8ewA'
-api_secret: '9afklXAtVBckWVmenjyenSHy9C8x/bmNi8yZIU+JlnAl9wFodePTDPKlxqocUaIvDP5kTLOXUnMUDN08'
-
-syslog_desc_postfix: ' - managed by Ansible' 

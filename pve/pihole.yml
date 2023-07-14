@@ -1,6 +1,0 @@
-# https://github.com/ansible-collections/community.general/issues/4408
-
-- name: setup pihole
-  hosts: test
-  roles:
-  - pihole

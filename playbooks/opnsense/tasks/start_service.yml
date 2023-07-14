@@ -1,0 +1,9 @@
+---
+- name: start service
+  ansibleguy.opnsense.service:
+    name: '{{ item.service }}'
+    action: restart
+  loop:
+  - service: ids
+  - service: syslog
+  - service: node_exporter

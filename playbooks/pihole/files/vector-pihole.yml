@@ -1,0 +1,85 @@
+---
+sources:
+  input_pihole_log:
+    type: file
+    include:
+    - /var/log/pihole/pihole.log
+
+  input_host_metrics:
+    type: host_metrics
+
+transforms:
+  label_pihole:
+    type: remap
+    inputs:
+    - input_pihole_log
+    # source: |-
+    #   .host.name = "pihole1"
+    #   .container.name = "pihole"
+    #   .service.name = "pihole"
+    source: |-
+      .host = "pihole1"
+      .appname = "pihole"
+
+  label_host_metrics:
+    type: remap
+    inputs:
+    - input_host_metrics
+    source: |-
+      .tags.host = "pihole1"
+
+sinks:
+  monitoring_vector:
+    type: vector
+    address: 10.10.1.6:6000
+    inputs:
+    - label_pihole
+
+  monitoring_mimir:
+    type: prometheus_remote_write
+    inputs:
+    - label_host_metrics
+    endpoint: http://10.10.1.6:3101/api/v1/push # https://grafana.com/docs/mimir/latest/references/http-api/#remote-write
+
+  # debug_console:
+  #   type: console
+  #   encoding:
+  #     codec: json
+  #   inputs:
+  #   - label_pihole
+  #   # - label_host_metrics
+  #   - input_host_metrics
+
+# {
+#   "appname":"pihole",
+#   "facility":"local7",
+#   "host":"pihole1",
+#   "hostname":"pihole1",
+#   "message":"Jul  4 16:13:20 dnsmasq[210]: 6344 10.10.1.3/50649 cached digi-ookla06.digi.com.my is 115.164.128.164",
+#   "severity":"info",
+#   "source_ip":"10.10.1.4",
+#   "source_type":"syslog",
+#   "timestamp":"2023-07-04T16:13:20Z"
+# }
+      
+# {
+#   "file":"/var/log/pihole/pihole.log",
+#   "host":"pihole-pod-0",
+#   "message":"Jul  4 23:32:06 dnsmasq[265]: 7751 10.10.1.3/51098 cached digi-ookla06.digi.com.my is 2001:4458:4000:8446::4",
+#   "source_type":"file",
+#   "timestamp":"2023-07-04T15:32:07.522219332Z"
+# }
+      
+# {
+#     "name":"network_receive_errs_total",
+#     "namespace":"host",
+#     "tags":
+#     {
+#       "collector":"network",
+#       "device":"eth0",
+#       "host":"pihole-pod-0"
+#     },
+#     "timestamp":"2023-07-05T09:36:27.165349411Z",
+#     "kind":"absolute",
+#     "counter":{"value":0.0}
+# }

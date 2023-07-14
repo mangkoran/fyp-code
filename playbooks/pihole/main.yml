@@ -1,0 +1,8 @@
+---
+- hosts: test
+  become: yes
+
+  tasks:
+  - ansible.builtin.import_tasks: ./tasks/config_podman.yml
+  - ansible.builtin.import_tasks: ./tasks/run_pihole_dep.yml
+  # - ansible.builtin.import_tasks: ./tasks/rm_pihole_dep.yml

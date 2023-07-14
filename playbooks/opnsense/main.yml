@@ -1,0 +1,19 @@
+---
+- hosts: opnsense
+  connection: local
+  gather_facts: false
+
+  vars_files:
+  - vars.yml
+
+  module_defaults:
+    group/ansibleguy.opnsense.all:
+      firewall: '{{ ansible_host }}'
+      api_key: '{{ api_key }}'
+      api_secret: '{{ api_secret }}'
+      ssl_verify: false
+
+  tasks:
+  # - ansible.builtin.import_tasks: ./tasks/config_syslog.yml
+  # - ansible.builtin.import_tasks: ./tasks/start_service.yml
+  - ansible.builtin.import_tasks: ./tasks/config_firewall_rule.yml

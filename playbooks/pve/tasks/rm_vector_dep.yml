@@ -1,0 +1,5 @@
+---
+- name: remove vector deployment
+  containers.podman.podman_play:
+    kube_file: /root/podman/pve-deployment.yml
+    state: absent
