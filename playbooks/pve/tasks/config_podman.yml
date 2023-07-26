@@ -20,7 +20,7 @@
 
 - name: run hello-world
   containers.podman.podman_container:
-    name: hello-world
+    name: hello_world
     image: docker.io/library/hello-world:latest
     state: started
     rm: true

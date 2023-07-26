@@ -20,5 +20,5 @@ monitoring:
 
 test:
   hosts:
-    test1:
-      ansible_host: 10.10.1.20
+    monitoring1:
+      ansible_host: 10.10.1.30

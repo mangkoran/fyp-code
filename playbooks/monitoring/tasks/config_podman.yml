@@ -1,19 +1,15 @@
 ---
-- name: check podman install
-  ansible.builtin.command: which podman
-  ignore_errors: true
-  register: podman_install
-
 - name: install podman
-  when: podman_install.rc != 0
-  block:
-  - name: install podman
-    ansible.builtin.apt:
-      name: podman
-      update_cache: yes
-      state: latest
+  register: podman_install
+  ansible.builtin.apt:
+    name: podman
+    update_cache: yes
+    state: present
 
-  - name: copy podman config
+- name: update podman config
+  when: podman_install.changed == true
+  block:
+  - name: update podman config
     ansible.builtin.copy:
       src: ../files/containers-storage.conf
       dest: /etc/containers/storage.conf
@@ -24,7 +20,7 @@
 
 - name: run hello-world
   containers.podman.podman_container:
-    name: hello-world
+    name: hello_world
     image: docker.io/library/hello-world:latest
     state: started
     rm: true

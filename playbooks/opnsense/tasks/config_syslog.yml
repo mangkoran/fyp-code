@@ -1,11 +1,11 @@
 ---
-- name: setup vector syslog target
+- name: setup syslog target
   ansibleguy.opnsense.syslog:
     description: 'Test{{ syslog_desc_postfix }}'
-    enabled: false
-    target: '10.10.1.40'
-    port: 1514
-    transport: 'tcp4'
+    enabled: true
+    target: 10.10.1.10
+    port: 9000
+    transport: tcp4
     rfc5424: true
     match_fields:
     - description

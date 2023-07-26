@@ -1,5 +1,5 @@
 ---
-- name: create containers
+- name: create container
   community.general.proxmox:
     api_user: '{{ api_user }}'
     api_host: '{{ api_host }}'
@@ -32,14 +32,15 @@
   pause:
     seconds: 10
 
-- name: start created containers
+- name: start container
   community.general.proxmox:
     api_user: '{{ api_user }}'
     api_host: '{{ api_host }}'
-    api_token_id: '{{ api_token_id }}'
-    api_token_secret: '{{ api_token_secret }}'
+    api_password: '{{ api_password }}'
+    # api_token_id: '{{ api_token_id }}'
+    # api_token_secret: '{{ api_token_secret }}'
     node: '{{ item.value.node | default(defaults.node) }}'
     hostname: '{{ item.item.key }}'
     state: started
   with_items: '{{ created_containers.results }}'
-  when: item.changed
+  # when: item.changed

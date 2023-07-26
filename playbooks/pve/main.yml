@@ -6,7 +6,7 @@
   - vars.yml
 
   tasks:
-  # - ansible.builtin.import_tasks: ./tasks/deploy_lxc.yml
-  - ansible.builtin.import_tasks: ./tasks/config_podman.yml
-  - ansible.builtin.import_tasks: ./tasks/run_vector_dep.yml
+  - ansible.builtin.import_tasks: ./tasks/deploy_lxc.yml
+  # - ansible.builtin.import_tasks: ./tasks/config_podman.yml
+  # - ansible.builtin.import_tasks: ./tasks/run_vector_dep.yml
   # - ansible.builtin.import_tasks: ./tasks/rm_vector_dep.yml
